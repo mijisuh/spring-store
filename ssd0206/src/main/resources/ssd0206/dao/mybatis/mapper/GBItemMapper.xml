@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="ssd0206.dao.mybatis.mapper.GBItemMapper">
+ <cache />
+ 
+ <select id="getGBItemList" resultType="GBItem">
+	SELECT 
+		ITEM_ID as "itemId",
+	 	LIST_PRICE as "listPrice",
+	 	DiSCOUNT_RATE as "discountrate",
+	 	MIN_NUM as "minNum",
+	 	FINAL_QUANTITY as "finalQuantity",
+        SUPPNAME,
+        STATUS as "status",
+        ATTR1 as "attribute1",
+        ATTR2 as "attribute2",
+        ATTR3 as "attribute3",
+        NAME as "name",
+        DESCRIPTION as "description",
+        CAT_NAME as "catName",
+        CAT_ID as "catId",
+        FINAL_PRICE as "finalPrice",
+        IMG_FILENAME as "imgFile",
+        PERIOD as "period",
+        DEALID as "dealId"
+    FROM GB_ITEM
+</select>
+  
+<select id= "getGBItemListByCatId" parameterType= "int" resultType= "GBItem">
+	SELECT 	 	
+	 	g.ITEM_ID as "itemId",
+	 	g.LIST_PRICE as "listPrice",
+	 	g.DiSCOUNT_RATE as "discountrate",
+	 	g.MIN_NUM as "minNum",
+	 	g.FINAL_QUANTITY as "finalQuantity",
+        g.SUPPNAME,
+        g.STATUS as "status",
+        g.ATTR1 as "attribute1",
+        g.ATTR2 as "attribute2",
+        g.ATTR3 as "attribute3",
+        g.NAME as "name",
+        g.DESCRIPTION as "description",
+        g.CAT_NAME as "catName",
+        g.CAT_ID as "catId",
+        g.FINAL_PRICE as "finalPrice",
+        g.IMG_FILENAME as "imgFile",
+        g.PERIOD as "period",
+        g.DEALID as "dealId"
+        
+    FROM GB_ITEM g, Category c
+    WHERE g.CAT_NAME = c.name AND c.CAT_ID = #{catId} AND c.DEAL_Id = 2
+</select>
+	
+<insert id="insertGBItem" parameterType = "GBItem">
+		<selectKey keyProperty="itemId" resultType="int" order="BEFORE">
+		SELECT GB_ITEM_SEQ.nextval AS GB_ITEM_ID FROM DUAL
+	</selectKey>
+    INSERT INTO GB_ITEM
+      (ITEM_ID, LIST_PRICE, DiSCOUNT_RATE, MIN_NUM, FINAL_QUANTITY, SUPP_ID, STATUS, ATTR1, ATTR2, ATTR3, NAME, DESCRIPTION, CATNAME, CAT_ID, FINAL_PRICE, IMG_FILENAME, PERIOD, DEALID)
+    VALUES
+      (#{itemId}, #{listPrice}, #{discountrate}, #{minNum}, #{finalQuantity}, #{supplierId}, #{status}, #{attribute1}, #{attribute2}, #{attribute3}, #{name}, #{description}, #{catName}, #{catId}, #{finalPrice}, #{imgFile}, #{period}, #{dealId})
+  	</insert>
+  	
+<select id= "getGBItem" parameterType= "int" resultType= "GBItem">
+	SELECT 
+		ITEM_ID as "itemId",
+	 	LIST_PRICE as "listPrice",
+	 	DiSCOUNT_RATE as "discountrate",
+	 	FINAL_QUANTITY as "finalQuantity",
+        SUPPNAME,
+        STATUS as "status",
+        ATTR1 as "attribute1",
+        ATTR2 as "attribute2",
+        ATTR3 as "attribute3",
+        NAME as "name",
+        DESCRIPTION as "description",
+        CAT_NAME as "catName",
+        CAT_ID as "catId",
+        FINAL_PRICE as "finalPrice",
+        IMG_FILENAME as "imgFile",
+        PERIOD as "period",
+        DEALID as "dealId"
+    FROM GB_ITEM
+    WHERE ITEM_ID = #{itemId}
+	</select>
+	
+	<select id= "getGBItemByKeyword" parameterType= "String" resultType= "GBItem">
+	SELECT 
+		ITEM_ID as "itemId",
+	 	LIST_PRICE as "listPrice",
+	 	DiSCOUNT_RATE as "discountrate",
+	 	FINAL_QUANTITY as "finalQuantity",
+        i.SUPPNAME,
+        STATUS as "status",
+        ATTR1 as "attribute1",
+        ATTR2 as "attribute2",
+        ATTR3 as "attribute3",
+        NAME as "name",
+        DESCRIPTION as "description",
+        CAT_NAME as "catName",
+        CAT_ID as "catId",
+        FINAL_PRICE as "finalPrice",
+        IMG_FILENAME as "imgFile",
+        PERIOD as "period",
+        DEALID as "dealId"
+    FROM GB_ITEM
+    WHERE NAME LIKE #{keyword}
+	</select>
+	
+	<select id= "getGBItemBySuppId" parameterType= "int" resultType= "GBItem">
+	SELECT DISTINCT
+		i.ITEM_ID as "itemId",
+	 	i.LIST_PRICE as "listPrice",
+	 	i.DiSCOUNT_RATE as "discountrate",
+	 	i.FINAL_QUANTITY as "finalQuantity",
+        i.STATUS as "status",
+        i.ATTR1 as "attribute1",
+        i.ATTR2 as "attribute2",
+        i.ATTR3 as "attribute3",
+        i.NAME as "name",
+        i.DESCRIPTION as "description",
+        i.CAT_NAME as "catName",
+        i.CAT_ID as "catId",
+        i.FINAL_PRICE as "finalPrice",
+        i.IMG_FILENAME as "imgFile",
+        i.PERIOD as "period",
+        i.DEALID as "dealId",
+        i.SUPPNAME
+    FROM GB_ITEM i, ACCOUNT a
+    WHERE i.SUPPNAME = a.USERNAME AND a.USER_ID = #{userId}
+	</select>
+
+</mapper>

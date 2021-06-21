@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="ssd0206.dao.mybatis.mapper.ACItemMapper">
+ <cache />
+ 
+  <update id="closeEvent" parameterType="int">
+    <![CDATA[
+     UPDATE AC_ITEM SET STATUS = '경매종료'
+     WHERE AC_ITEM_ID = #{acItemId}
+    ]]>
+  </update>
+  
+  
+	<insert id="insertAcItem" parameterType = "ACItem">
+		<selectKey keyProperty="acItemId" resultType="int" order="BEFORE">
+		SELECT AC_ITEM_SEQ.nextval AS AC_ITEM_ID FROM DUAL
+	</selectKey>
+    INSERT INTO AC_ITEM
+      (AC_ITEM_ID, MIN_PRICE, SUPPNAME, STATUS, AC_TIME, ATTR1, ATTR2, ATTR3, NAME, DESCRIPTION, REGTIME, CATNAME, IMG_FILENAME)
+    VALUES
+      (#{acItemId}, #{minPrice}, #{suppName}, #{status}, #{acTime}, #{attr1}, #{attr2}, #{attr3}, #{name}, #{desc}, #{regTime}, #{catName}, #{imgFile})
+  	</insert>
+  	
+	<update id="updateAcItem" parameterType="ACItem">
+	 UPDATE AC_ITEM SET
+       MIN_PRICE = #{minPrice},
+       AC_TIME = #{acTime},
+       ATTR1 = #{attr1},
+       ATTR2 = #{attr2},
+       ATTR3 = #{attr3}, 
+       NAME = #{name},
+       DESCRIPTION = #{desc},
+       CATNAME = #{catName},
+       SUPPNAME = #{suppName},
+       REGTIME = #{regTime},
+       IMG_FILENAME = #{imgFile}
+     WHERE AC_ITEM_ID= #{acItemId}
+	</update>
+
+
+	<update id="updateAcPrice">
+	 UPDATE AC_ITEM SET
+       MIN_PRICE = #{param1}
+     WHERE AC_ITEM_ID= #{param2}
+	</update>
+
+	<delete id= "deleteAcItem" parameterType = "int">
+		DELETE
+		FROM AC_ITEM
+		WHERE AC_ITEM_ID = #{acItemId}
+	
+	</delete>
+	
+	<select id= "getItem" parameterType= "int" resultType= "ACItem">
+	SELECT 
+		AC_ITEM_ID as "acItemId",
+	 	MIN_PRICE as "minPrice",
+	 	SUPPNAME as "suppName",
+	 	AC_TIME as "acTime",
+	 	ATTR1,
+	 	ATTR2,
+	 	ATTR3,
+	 	NAME,
+	 	REGTIME as "regTime", 
+	 	DESCRIPTION as "desc", 
+	 	CATNAME as "catName"
+    FROM AC_ITEM
+    WHERE AC_ITEM_ID= #{acItemId}
+	</select>
+	
+	<select id= "getACOrder" parameterType= "int" resultType= "ACOrder">
+	SELECT 
+		AC_ITEM.NAME,
+	 	ACORDER.AC_PRICE as "acPrice",
+	 	ACORDER.USER_ID as "userId"
+    FROM AC_ITEM, ACORDER
+    WHERE AC_ITEM.AC_ITEM_ID= ACORDER.AC_ITEM_ID
+    	AND ACORDER.USER_ID =#{userId}
+	</select>
+
+
+	
+
+	
+	<select id= "getACItemList" resultType= "ACItem">
+	SELECT 
+		AC_ITEM_ID as "acItemId",
+	 	MIN_PRICE as "minPrice",
+	 	SUPPNAME as "suppName",
+	 	AC_TIME as "acTime",
+	 	ATTR1,
+	 	ATTR2,
+	 	ATTR3,
+	 	NAME,
+	 	REGTIME as "regTime", 
+	 	DESCRIPTION as "desc", 
+	 	CATNAME as "catName"
+    FROM AC_ITEM
+	</select>
+	
+	<select id= "getACItemListByCatId" parameterType= "int" resultType= "ACItem">
+	SELECT 
+		a.AC_ITEM_ID as "acItemId",
+	 	a.MIN_PRICE as "minPrice",
+	 	a.SUPPNAME as "suppName",
+	 	a.AC_TIME as "acTime",
+	 	a.ATTR1,
+	 	a.ATTR2,
+	 	a.ATTR3,
+	 	a.NAME,
+	 	a.REGTIME as "regTime", 
+	 	a.DESCRIPTION as "desc", 
+	 	a.CATNAME as "catName"
+    FROM AC_ITEM a, Category c
+    WHERE a.CATNAME = c.NAME AND c.CAT_ID = #{catId} AND c.DEAL_Id = 1
+	</select>
+	
+	<select id= "getACItemByKeyword" parameterType= "String" resultType= "ACItem">
+	SELECT 
+		AC_ITEM_ID as "acItemId",
+	 	MIN_PRICE as "minPrice",
+	 	SUPPNAME as "suppName",
+	 	AC_TIME as "acTime",
+	 	ATTR1,
+	 	ATTR2,
+	 	ATTR3,
+	 	NAME,
+	 	REGTIME as "regTime", 
+	 	DESCRIPTION as "desc", 
+	 	CATNAME as "catName"
+    FROM AC_ITEM
+    WHERE NAME LIKE #{keyword}
+	</select>
+	
+	<select id= "getACItemBySuppId" parameterType= "int" resultType= "ACItem">
+	SELECT DISTINCT
+		a.AC_ITEM_ID as "acItemId",
+	 	a.MIN_PRICE as "minPrice",
+	 	a.SUPPNAME as "suppName",
+	 	a.AC_TIME as "acTime",
+	 	a.ATTR1,
+	 	a.ATTR2,
+	 	a.ATTR3,
+	 	a.NAME,
+	 	a.REGTIME as "regTime", 
+	 	a.DESCRIPTION as "desc", 
+	 	a.CATNAME as "catName"
+    FROM AC_ITEM a, ACCOUNT u
+    WHERE a.SUPPNAME = u.USERNAME AND u.USER_ID = #{userId}
+	</select>
+
+</mapper>
+
+
+  
+  
+  

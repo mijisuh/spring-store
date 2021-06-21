@@ -1,0 +1,68 @@
+@charset "UTF-8";
+table.top {
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+}
+
+table.top tr td {
+    padding: 5px;
+}
+
+table.cat {
+	width: 100%;
+	height: 5%;
+	text-align: center; 
+	border: solid;
+	font-weight: bold;
+	border-collapse: collapse;
+ 	background-color: #DDDDDD;
+}
+
+table.cat tr td {
+    width: 20%;
+    border: 1px solid;
+}
+
+a {
+	text-decoration:none;
+    color: black;
+}
+
+body {
+	padding-left: 15%;
+	padding-right: 15%;
+}
+
+.accountForm {
+	margin: 5% auto;
+	text-align: center;
+	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+	border-top: 1px solid #efefef;
+	display: flex;
+	flex-direction: column;
+}
+
+.error {
+	color: red;
+	font-weight: bold;
+}
+
+.accountInfo {
+	width: 20%;
+	padding-top: 5%;
+	text-align: center; 
+	float: left;
+}
+
+.accountInfoMain {
+	margin: 5% auto;
+	padding: 0 40%;
+	text-align: center; 
+}
+
+.accountInfoOrder {
+	margin: 5% auto;
+	padding: 0 40%;
+	text-align: center; 
+}

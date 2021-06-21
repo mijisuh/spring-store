@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ssd0206.dao.mybatis.mapper.InterestMapper">
+
+  <cache />
+
+  <select id="getInterestACs" resultType="Interest">
+   SELECT DISTINCT item.IMG_FILENAME AS img, item.NAME AS name, interest.REG_DT AS regDt, interest.AC_ITEM_ID AS itemId
+   FROM INTEREST_AC interest, AC_ITEM item
+   WHERE item.AC_ITEM_ID = interest.AC_ITEM_ID AND interest.USER_ID = #{userId}
+  </select>
+ 
+  <insert id="insertInterestAC" parameterType="int">
+  	<selectKey keyProperty="interestACId" resultType="int" order="BEFORE">
+          SELECT INTEREST_AC_SEQ.nextval AS interestACId FROM DUAL
+     </selectKey>
+     
+    INSERT INTO INTEREST_AC (INTEREST_ID, USER_ID, AC_ITEM_ID, REG_DT)
+    VALUES(#{interestACId}, #{userId}, #{itemId}, TO_CHAR(SYSDATE,'YYYY-MM-DD'))
+  </insert>
+  
+  <delete id="deleteInterestAC" parameterType="String">
+  	DELETE FROM INTEREST_AC
+	WHERE AC_ITEM_ID = #{itemId} AND USER_ID = #{userId}
+  </delete>
+  
+  <select id="getInterestGBs" resultType="Interest">
+   SELECT item.IMG_FILENAME AS img, item.NAME AS name, interest.REG_DT AS regDt, interest.GB_ITEM_ID AS itemId
+   FROM INTEREST_GB interest, GB_ITEM item
+   WHERE item.ITEM_ID = interest.GB_ITEM_ID AND interest.USER_ID = #{userId}
+  </select>
+ 
+  <insert id="insertInterestGB" parameterType="int">
+  	<selectKey keyProperty="interestGBId" resultType="int" order="BEFORE">
+          SELECT INTEREST_GB_SEQ.nextval AS interestACId FROM DUAL
+     </selectKey>
+     
+    INSERT INTO INTEREST_GB (INTEREST_ID, USER_ID, GB_ITEM_ID, REG_DT)
+    VALUES(#{interestGBId}, #{userId}, #{itemId}, TO_CHAR(SYSDATE,'YYYY-MM-DD'))
+  </insert>
+  
+  <delete id="deleteInterestGB" parameterType="String">
+  	DELETE FROM INTEREST_GB
+	WHERE AC_ITEM_ID = #{itemId} AND USER_ID = #{userId}
+  </delete>
+
+</mapper>

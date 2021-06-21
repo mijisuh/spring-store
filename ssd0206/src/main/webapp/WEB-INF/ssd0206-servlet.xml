@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  - DispatcherServlet application context for the Spring web MVC
+  - implementation of JPetStore's web tier.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 	
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       	http://www.springframework.org/schema/beans/spring-beans.xsd
+       	http://www.springframework.org/schema/context
+       	http://www.springframework.org/schema/context/spring-context.xsd
+       	http://www.springframework.org/schema/mvc 				
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd"> 
+
+	<context:component-scan base-package="ssd0206.controller" />
+
+	<mvc:annotation-driven/>		<!-- create RequestMappingHandlerMapping -->
+	
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages.validation</value>
+			</list>
+		</property>
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	
+	
+	<!-- <mvc:view-controller path="/shop/home.do" view-name="home"/>  -->
+	<mvc:view-controller path="/shop/signonForm.do" view-name="account/signonForm"/>
+	<mvc:view-controller path="/shop/myAccountInfo.do" view-name="account/myAccountInfo"/>
+	<mvc:view-controller path="/shop/viewCart.do" view-name="etcs/Cart"/>
+	<mvc:view-controller path="/shop/gb/gb.do" view-name="gb/gb"/>
+	
+	<!-- 경로: src/main/webapp/... -->
+	<mvc:resources mapping="/style/**" location="/style/" />
+	<mvc:resources mapping="/images/**" location="/images/" />
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+    	    <mvc:mapping path="/shop/editAccount.do"/>
+        	<mvc:mapping path="/shop/listOrders.do"/>
+        	<mvc:mapping path="/shop/viewOrder.do"/>
+        	<mvc:mapping path="/shop/newOrder.do"/>
+        	<mvc:mapping path="/shop/sales/insert.do"/>
+        	<mvc:mapping path="/shop/ac/acReg.do"/>
+        	<mvc:mapping path="/shop/ac/bidReg.do"/>
+        	<mvc:mapping path="/shop/ac/addWishlist.do"/>
+        	<mvc:mapping path="/shop/gb/addWishlist.do"/>
+        	<mvc:mapping path="/shop/gb/gb.do"/>
+        	<bean class="ssd0206.controller.SignonInterceptor" />
+    	</mvc:interceptor>
+	</mvc:interceptors>
+	
+	
+</beans>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ssd0206.dao.mybatis.mapper.SalesItemMapper">
+  <cache />
+
+<!-- 일반판매 상품 목록 -->
+  <select id="getSalesItemList" resultType="SalesItem">
+    SELECT
+      ITEM_ID AS itemId,
+      LIST_PRICE AS listPrice,
+      UNIT_PRICE AS unitPrice,
+      SUPP_ID AS supplierId,
+      STATUS,
+      ATTR1 AS attribute1,
+      ATTR2 AS attribute2,
+      ATTR3 AS attribute3,
+      NAME,
+      DESCRIPTION AS description,
+      CAT_NAME AS catName,
+      IMG_FILENAME AS imgFileName
+    FROM SALES_ITEM
+  </select>
+  
+   <select id="getSalesItemListByCatId" resultType="SalesItem">
+    SELECT
+      s.ITEM_ID AS itemId,
+      s.LIST_PRICE AS listPrice,
+      s.UNIT_PRICE AS unitPrice,
+      s.SUPP_ID AS supplierId,
+      s.STATUS,
+      s.ATTR1 AS attribute1,
+      s.ATTR2 AS attribute2,
+      s.ATTR3 AS attribute3,
+      s.NAME,
+      s.DESCRIPTION AS description,
+      s.CAT_NAME AS catName,
+      s.IMG_FILENAME AS imgFileName
+    FROM SALES_ITEM s, CATEGORY c
+    WHERE s.CAT_NAME = c.NAME AND c.CAT_ID = #{catId} AND c.DEAL_ID = 0
+  </select>
+
+  <select id="getItem" resultType="SalesItem">
+    SELECT
+      ITEM_ID AS itemId,
+      LIST_PRICE AS listPrice,
+      UNIT_PRICE AS unitPrice,
+      SUPP_ID AS supplierId,
+      STATUS,
+      ATTR1 AS attribute1,
+      ATTR2 AS attribute2,
+      ATTR3 AS attribute3,
+      NAME,
+      DESCRIPTION AS description,
+      CAT_NAME AS catName,
+      IMG_FILENAME AS imgFileName
+    FROM SALES_ITEM
+    WHERE ITEM_ID = #{itemId}
+  </select>
+  
+  <select id="getSalesItem" parameterType= "int" resultType="SalesItem">
+    SELECT
+      I.ITEM_ID,
+      LIST_PRICE AS listPrice,
+      UNIT_PRICE AS unitPrice,
+      SUPP_ID AS supplierId,
+      STATUS,
+      ATTR1 AS attribute1,
+      ATTR2 AS attribute2,
+      ATTR3 AS attribute3,
+      NAME,
+      DESCRIPTION AS description,
+      CAT_NAME AS catName
+    FROM SALES_ITEM I
+    WHERE I.ITEM_ID = #{value}
+   </select>
+   
+   <select id="getInventoryQuantity" resultType="int">
+    SELECT QTY AS value
+    FROM INVENTORY
+    WHERE ITEMID = #{itemId}
+  </select>
+
+  <update id="updateInventoryQuantity">
+    UPDATE INVENTORY 
+    SET QTY = QTY - #{increment}
+    WHERE ITEMID = #{itemId}
+  </update>
+  
+  <insert id="insertSalesItem" parameterType = "SalesItem">
+		<selectKey keyProperty="itemId" resultType="int" order="BEFORE">
+		SELECT SALES_ITEM_SEQ.nextval AS ITEM_ID FROM DUAL
+	</selectKey>
+  	INSERT INTO SALES_ITEM
+  	 (ITEM_ID, LIST_PRICE, UNIT_PRICE, SUPP_ID, STATUS, ATTR1, ATTR2, ATTR3, NAME, DESCRIPTION, CAT_NAME, IMG_FILENAME)
+  	VALUES
+  	 (#{itemId}, #{listPrice}, #{unitPrice}, #{supplierId}, #{status}, #{attribute1}, #{attribute2}, #{attribute3}, #{name}, #{description}, #{catName}, #{imgFileName})
+  </insert>
+  
+  <select id="getSalesItemByKeyword" parameterType="String" resultType="SalesItem">
+    SELECT
+      ITEM_ID AS itemId,
+      LIST_PRICE AS listPrice,
+      UNIT_PRICE AS unitPrice,
+      SUPP_ID AS supplierId,
+      STATUS,
+      ATTR1 AS attribute1,
+      ATTR2 AS attribute2,
+      ATTR3 AS attribute3,
+      NAME,
+      DESCRIPTION AS description,
+      CAT_NAME AS categoryName,
+      IMG_FILENAME AS imgFileName
+    FROM SALES_ITEM
+    WHERE NAME LIKE #{keyword}
+  </select>
+  
+  <select id="getSalesItemBySuppId" parameterType="int" resultType="SalesItem">
+    SELECT
+      ITEM_ID AS itemId,
+      LIST_PRICE AS listPrice,
+      UNIT_PRICE AS unitPrice,
+      SUPP_ID AS supplierId,
+      STATUS,
+      ATTR1 AS attribute1,
+      ATTR2 AS attribute2,
+      ATTR3 AS attribute3,
+      NAME,
+      DESCRIPTION AS description,
+      CAT_NAME AS categoryName,
+      IMG_FILENAME AS imgFileName
+    FROM SALES_ITEM
+    WHERE SUPP_ID = #{userId}
+  </select>
+</mapper>

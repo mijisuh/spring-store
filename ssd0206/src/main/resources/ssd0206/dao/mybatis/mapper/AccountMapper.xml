@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ssd0206.dao.mybatis.mapper.AccountMapper">
+  <cache />
+
+  <select id="getAccountByUserId" resultType="Account">
+    SELECT USER_ID AS userId, ACCOUNT_NAME AS accountName, PASSWORD, USERNAME, EMAIL, PHONE, ADDR1 AS address1, ADDR2 AS address2, CITY, STATE, ZIP, COUNTRY, CARD_ID
+    FROM ACCOUNT
+    WHERE USER_ID = #{userId}
+  </select>
+
+  <select id="getAccountByAccountNameAndPassword" resultType="Account">
+    SELECT USER_ID AS userId, ACCOUNT_NAME AS accountName, PASSWORD, USERNAME, EMAIL, PHONE, ADDR1 AS address1, ADDR2 AS address2, CITY, STATE, ZIP, COUNTRY, CARD_ID
+    FROM ACCOUNT
+    WHERE ACCOUNT_NAME = #{param1}
+      AND PASSWORD = #{param2}
+  </select>
+
+  <select id="getAccountList" resultType="Account">
+    SELECT USER_ID AS userId, ACCOUNT_NAME AS accountName, PASSWORD, USERNAME, EMAIL, PHONE, ADDR1 AS address1, ADDR2 AS address2, CITY, STATE, ZIP, COUNTRY, CARD_ID
+    FROM ACCOUNT
+  </select>
+
+  <update id="updateAccount" parameterType="Account">
+    UPDATE ACCOUNT SET
+      ACCOUNT_NAME = #{accountName},
+      PASSWORD = #{password},
+      USERNAME = #{username},	
+      EMAIL = #{email},
+      PHONE = #{phone},
+      ADDR1 = #{address1},
+      ADDR2 = #{address2,jdbcType=VARCHAR},
+      CITY = #{city},
+      STATE = #{state},
+      ZIP = #{zip},
+      COUNTRY = #{country}
+    WHERE USER_ID = #{userId}
+  </update>
+ 
+
+  <insert id="insertAccount" parameterType="Account">
+  	<selectKey keyProperty="userId" resultType="int" order="BEFORE">
+          SELECT ACCOUNT_SEQ.nextval AS userId FROM DUAL
+     </selectKey>
+    INSERT INTO ACCOUNT
+      (USER_ID, ACCOUNT_NAME, PASSWORD, USERNAME, EMAIL, PHONE, ADDR1, ADDR2, CITY, STATE, ZIP, COUNTRY, CARD_ID)
+    VALUES
+      (#{userId}, #{accountName}, #{password}, #{username}, #{email}, #{phone}, #{address1}, #{address2,jdbcType=VARCHAR}, #{city}, #{state}, #{zip}, #{country}, null)
+  </insert>
+  
+  <delete id="deleteAccountByUserId" parameterType="String">
+  	DELETE FROM ACCOUNT
+	WHERE USER_ID = #{userId}
+  
+  </delete>
+  <!--  
+  TODO MyBatis 3 does not map booleans to integers
+  <update id="updateProfile" parameterType="Account">
+    UPDATE PROFILE SET
+      LANGPREF = #{languagePreference},
+      FAVCATEGORY = #{favouriteCategoryId},
+      MYLISTOPT = #{listOption},
+      BANNEROPT = #{bannerOption}
+    WHERE USERID = #{username}
+  </update>
+  -->
+
+  <!--  
+  TODO MyBatis 3 does not map booleans to integers
+  <insert id="insertProfile" parameterType="Account">
+    INSERT INTO PROFILE (LANGPREF, FAVCATEGORY, MYLISTOPT, BANNEROPT, USERID)
+    VALUES (#{languagePreference}, #{favouriteCategoryId}, #{listOption}, #{bannerOption}, #{username})
+  </insert>
+  -->
+</mapper>

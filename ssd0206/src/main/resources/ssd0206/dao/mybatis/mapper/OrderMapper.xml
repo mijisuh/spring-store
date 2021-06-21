@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ssd0206.dao.mybatis.mapper.OrderMapper">
+
+  <cache />
+
+  <select id="getOrder" resultType="Order">
+    select
+      BILL_ADDR1 AS billAddress1,
+      BILL_ADDR2 AS billAddress2,
+      BILL_CITY,
+      BILL_COUNTRY,
+      BILL_STATE,
+      BILLTOFIRSTNAME,
+      BILLTOLASTNAME,
+      BILL_ZIP,
+      SHIP_ADDR1 AS shipAddress1,
+      SHIP_ADDR2 AS shipAddress2,
+      SHIP_CITY,
+      SHIP_COUNTRY,
+      SHIP_STATE,
+      SHIPTOFIRSTNAME,
+      SHIPTOLASTNAME,
+      SHIP_ZIP,
+      CARD_TYPE,
+      COURIER,
+      CREDIT_CARD,
+      EXPRDATE AS expiryDate,
+      LOCALE,
+      ORDER_DATE,
+      ORDERS.ORDERID,
+      TOTALPRICE,
+      USERID AS username,
+      STATUS
+    FROM ORDERS, ORDERSTATUS
+    WHERE ORDERS.ORDERID = #{value}
+      AND ORDERS.ORDERID = ORDERSTATUS.ORDERID
+  </select>
+
+  <select id="getOrdersByUsername" resultType="Order">
+    SELECT
+      o.ORDER_ID AS orderId,
+      o.BILL_ADDR1 AS billAddress1,
+      o.BILL_ADDR2 AS billAddress2,
+      o.BILL_CITY,
+      o.BILL_COUNTRY,
+      o.BILL_STATE,
+      o.BILL_ZIP,
+      o.SHIP_ADDR1 AS shipAddress1,
+      o.SHIP_ADDR2 AS shipAddress2,
+      o.SHIP_CITY,
+      o.SHIP_COUNTRY,
+      o.SHIP_STATE,
+      o.ZIP,
+      o.COURIER,
+      o.ORDER_DT AS orderDate,
+      o.TOTAL_PRICE AS totalPrice,
+      o.USER_ID AS userId
+    FROM ORDERS o, ACCOUNT a
+    WHERE a.USERNAME = #{username}
+      AND o.USER_ID = a.USER_ID
+    ORDER BY ORDER_DT
+  </select>
+  
+
+<!--   
+	<insert id="insertOrder">
+    INSERT INTO ORDERS (ORDERID, USERID, ORDERDATE, SHIPADDR1, SHIPADDR2, SHIPCITY, SHIPSTATE,
+      SHIPZIP, SHIPCOUNTRY, BILLADDR1, BILLADDR2, BILLCITY, BILLSTATE, BILLZIP, BILLCOUNTRY,
+      COURIER, TOTALPRICE, BILLTOFIRSTNAME, BILLTOLASTNAME, SHIPTOFIRSTNAME, SHIPTOLASTNAME,
+      CREDITCARD, EXPRDATE, CARDTYPE, LOCALE)
+    VALUES(#{orderId}, #{username}, #{orderDate}, #{shipAddress1}, #{shipAddress2,jdbcType=VARCHAR}, #{shipCity},
+      #{shipState}, #{shipZip}, #{shipCountry}, #{billAddress1}, #{billAddress2,jdbcType=VARCHAR}, #{billCity},
+      #{billState}, #{billZip}, #{billCountry}, #{courier}, #{totalPrice}, #{billToFirstName}, #{billToLastName},
+      #{shipToFirstName}, #{shipToLastName}, #{creditCard}, #{expiryDate}, #{cardType}, #{locale})
+  </insert>
+-->
+
+  <insert id="insertOrder">
+  	<selectKey keyProperty="orderId" resultType="int" order="BEFORE">
+      SELECT ordernum.nextval AS orderId FROM DUAL
+    </selectKey>
+    INSERT INTO ORDERS (ORDERID, USERID, ORDERDATE, SHIPADDR1, SHIPADDR2, SHIPCITY, SHIPSTATE,
+      SHIPZIP, SHIPCOUNTRY, BILLADDR1, BILLADDR2, BILLCITY, BILLSTATE, BILLZIP, BILLCOUNTRY,
+      COURIER, TOTALPRICE, BILLTOFIRSTNAME, BILLTOLASTNAME, SHIPTOFIRSTNAME, SHIPTOLASTNAME,
+      CREDITCARD, EXPRDATE, CARDTYPE, LOCALE)
+    VALUES(#{orderId}, #{username}, #{orderDate}, #{shipAddress1}, #{shipAddress2,jdbcType=VARCHAR}, #{shipCity},
+      #{shipState}, #{shipZip}, #{shipCountry}, #{billAddress1}, #{billAddress2,jdbcType=VARCHAR}, #{billCity},
+      #{billState}, #{billZip}, #{billCountry}, #{courier}, #{totalPrice}, #{billToFirstName}, #{billToLastName},
+      #{shipToFirstName}, #{shipToLastName}, #{creditCard}, #{expiryDate}, #{cardType}, #{locale})
+  </insert>
+
+  <insert id="insertOrderStatus">
+    INSERT INTO ORDER_STATUS (ORDERID, LINENUM, TIMESTAMP, STATUS)
+    VALUES (#{orderId,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC}, #{orderDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="msSqlServerInsertOrder" useGeneratedKeys="true">
+  	insert into orders (userid, orderdate, shipaddr1, shipaddr2,
+	  	shipcity, shipstate, shipzip, shipcountry, billaddr1, billaddr2,
+	  	billcity, billstate, billzip, billcountry, courier, totalprice,
+	  	billtofirstname, billtolastname, shiptofirstname, shiptolastname,
+	  	creditcard, exprdate, cardtype, locale) values (#username#,
+	  	#orderDate#, #shipAddress1#, #shipAddress2:VARCHAR#, #shipCity#,
+	  	#shipState#, #shipZip#, #shipCountry#, #billAddress1#,
+	  	#billAddress2:VARCHAR#, #billCity#, #billState#, #billZip#,
+	  	#billCountry#, #courier#, #totalPrice#, #billToFirstName#,
+	  	#billToLastName#, #shipToFirstName#, #shipToLastName#,
+	  	#creditCard#, #expiryDate#, #cardType#, #locale#); 
+  	select @@identity as value
+  </insert>
+
+<!--<delete id="deleteOrder">
+		delete from ORDERS where ORDERID = #{orderId} 
+	</delete>
+	
+	<delete id="deleteOrderStatus">
+		delete from ORDERSTATUS where ORDERID = #{orderId} 
+	</delete> -->
+</mapper>
